@@ -1,0 +1,16 @@
+.profile-avatar dt {
+  margin-bottom: 10px;
+}
+
+.profile-avatar .avatar {
+  box-sizing: content-box;
+  margin-bottom: 10px;
+  width: 150px;
+  height: 150px;
+  border: dotted 1px;
+}
+
+.profile-avatar .avatar img {
+  width: 150px;
+  height: 150px;
+}

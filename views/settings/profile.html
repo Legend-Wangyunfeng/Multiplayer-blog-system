@@ -1,0 +1,127 @@
+{{extend '../_layouts/home.html'}}
+
+{{block 'title'}}{{'多人博客 - 首页'}}{{/block}}
+{{block 'head'}}
+  <link rel="stylesheet" href="/public/css/settings.css">
+{{/block}}
+
+{{block 'body'}}
+<section class="container">
+  {{include '../_partials/settings-nav.html'}}
+  <div class="col-md-5">
+    <form id="profile_form">
+      <input type="text" name="email" value="{{ user.email }}" hidden>
+      <div class="form-group">
+        <label for="exampleInputEmail1">账号</label>
+        <p class="form-control-static">{{ user.email }}</p>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputNickname">昵称</label>
+        <input type="text" class="form-control" id="exampleInputNickname" placeholder="{{ user.nickname }}" name="nickname">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">介绍</label>
+        <textarea class="form-control" rows="3" name="bio"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">性别</label>
+        <div>
+          <label class="radio-inline">
+            <input type="radio" name="gender" id="inlineRadio1" value=1> 男
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="gender" id="inlineRadio2" value=0> 女
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="gender" id="inlineRadio3" value=-1> 保密
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">生日</label>
+        <input type="text" class="form-control" id="exampleInputPassword1" name="birthday", placeholder="格式为yyyy-MM-dd" required>
+      </div>
+      <button type="submit" class="btn btn-success">保存</button>
+    </form>
+  </div>
+  <div class="col-md-2 profile-avatar">
+    <dl>
+      <dt>头像设置</dt>
+      <dd>
+        
+        <div class="avatar">
+          <img src="{{ user.avatar }}" alt="默认头像">
+        </div>
+        <div>
+          <input type="file" name="avatar" id="up-avatar">
+          <button class="btn btn-default" id="button-avatar">Upload new picture</button>
+        </div>
+      </dd>
+    </dl>
+  </div>
+  <script src="/node_modules/jquery/dist/jquery.js"></script>
+  <script>
+    const btn = $('#button-avatar')
+    const file = $('#up-avatar')
+    const showarea = $('.avatar')[0]
+    btn.on('click', function (e) {
+      const fileobje = file[0].files[0]
+      let formData = new FormData()
+      formData.append('avatar', fileobje)
+      console.log(formData.get('avatar'))
+      const fr = new FileReader()
+      fr.readAsDataURL(fileobje)
+      fr.onload = function (t) {
+        // const img = showarea.children.length === 0 ? document.createElement('img') : showarea.children[0]
+        const img = $('.avatar')[0].children[0]
+        img.src = this.result
+        // showarea.appendChild(img)
+      }
+
+      $.ajax({
+        url: '/settings/avatar',
+        type: 'post',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function (data) {
+          if (data.err_code === 0) {
+            window.alert('上传成功')
+            window.location.reload()
+          }
+          else if(data.err_code === 1) {
+            window.alert('请上传jpg, jfif, png或gif格式的文件')
+          }
+          else if(data.err_code === 500) {
+            window.alert('服务器忙，请稍后重试')
+          }
+        }
+      })
+    })
+    $('#profile_form').on('submit', function (e) {
+      e.preventDefault()
+      const formData = $(this).serialize()
+      $.ajax({
+        url: '/settings/profile',
+        type: 'post',
+        data: formData,
+        dataType: 'json',
+        success: function (data) {
+          console.log(data)
+          const err_code = data.err_code
+          if (err_code === 0) {
+            window.location.href = '/'
+          }
+          else if (err_code === 1) {
+            window.alert('昵称已存在！')
+          }
+          else if ( err_code === 500) {
+            window.alert('服务器忙，请稍后重试！')
+          }
+        }
+      })
+    })
+  </script>
+</section>
+{{/block}}

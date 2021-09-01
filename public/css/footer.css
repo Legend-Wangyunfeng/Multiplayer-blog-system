@@ -1,0 +1,9 @@
+.footer {
+  position: absolute;
+  bottom: 0px;
+  margin-top: 5px;
+}
+
+.footer > div {
+  background-color:#DCDCDC;
+}

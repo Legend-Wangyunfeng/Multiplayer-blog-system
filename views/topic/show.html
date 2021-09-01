@@ -1,0 +1,98 @@
+{{extend '../_layouts/home.html'}}
+
+{{block 'title'}}{{'多人博客 - 首页'}}{{/block}}
+
+{{block 'head'}}
+<link rel="stylesheet" href="/public/css/markdown-github.css">
+<link rel="stylesheet" href="/public/css/show.css">
+<style>
+  .panel .panel-heading .action i {
+    margin-right: 10px;
+  }
+</style>
+{{/block}}
+
+{{block 'body'}}
+<section class="container">
+  <div class="row">
+    <div class="col-md-9">
+      <article class="markdown-body">
+      <h1 id="_1"><a name="user-content-_1" href="#_1" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>{{ topic.title }}</h1>
+      <p>• 作者 {{ topic.name }} • 发布于 {{ topic.create_time.toLocaleString() }} • 来自 {{ topic.area }}</p>
+      <div class="content">{{ topic.content }}</div>
+      <!-- <blockquote>
+        <p>杨柳青青江水平</p>
+      </blockquote>
+      <h2 id="_2"><a name="user-content-_2" href="#_2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>起步</h2>
+      <ul>
+        <li>123</li>
+        <li>456</li>
+        <li>789</li>
+      </ul>
+      <h3 id="_3"><a name="user-content-_3" href="#_3" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>哈哈哈</h3>
+      <p>然后这里就开始 <code>hello world</code> ，就用可以了。</p>
+      <p>下面是一段代码：</p>
+      <pre><code class="javascript">var foo = 'bar'
+  console.log(foo)
+  </code></pre>
+      <h3 id="_4"><a name="user-content-_4" href="#_4" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>嘿嘿</h3>
+      <h3 id="_5"><a name="user-content-_5" href="#_5" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>呼呼</h3>
+      <h2 id="_6"><a name="user-content-_6" href="#_6" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>是什么</h2>
+      <h2 id="_7"><a name="user-content-_7" href="#_7" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>为什么</h2>
+      <h2 id="_8"><a name="user-content-_8" href="#_8" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>怎么做</h2>
+      <h2 id="_9"><a name="user-content-_9" href="#_9" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>哈哈哈</h2> -->
+    </article>
+      {{each comment }}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span>{{ $value.name }}</span> commented 
+          <span>{{ $value.create_time.toLocaleString()}}</span>
+          <!-- <span class="action">
+            <a href=""><i class="glyphicon glyphicon-thumbs-up pull-right"></i></a>
+            <a href=""><i class="glyphicon glyphicon-remove-circle pull-right"></i></a>
+            <a href=""><i class="glyphicon glyphicon-remove-circle pull-right"></i></a>
+          </span> -->
+        </div>
+        <div class="panel-body">
+          {{ $value.content }}
+        </div>
+      </div>
+      {{ /each }}
+      <hr>
+      <form id="comment_form">
+        <input type="text" name='topicID' hidden value="{{ topic.id }}"> 
+        <div class="form-group">
+          <label for="exampleInputPassword1">添加回复</label>
+          <textarea class="form-control" name="content" cols="10" rows="10"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">回复</button>
+      </form>
+    </div>
+  </div>
+</section>
+<script src="/node_modules/jquery/dist/jquery.js"></script>
+<script>
+  $('#comment_form').on('submit', function (e) {
+    e.preventDefault()
+    const formData = $(this).serialize()   
+    $.ajax({
+      url: '/topic/comment',
+      type: 'post',
+      data: formData,
+      dataType: 'json',
+      success: function (data) {
+        if (data.err_code === 0) {
+          window.location.reload()
+        }
+        else if (data.err_code === 1) {
+          window.alert('请登录后发表评论')
+        }
+        else if (data.err_code === 500) {
+          window.alert('服务器繁忙，请稍后重试')
+        }
+      }
+    })
+  })
+  
+</script>
+{{/block}}

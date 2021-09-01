@@ -1,0 +1,16 @@
+.dropdown a:link {
+  color: #FFF;
+}
+
+.dropdown a:hover {
+  color: #444;
+}
+
+.navbar-nav > li > a.dropdown-toggle {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.navbar-nav > li > a.open {
+  background-color: #444;
+}

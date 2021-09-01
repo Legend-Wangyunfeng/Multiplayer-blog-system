@@ -1,0 +1,31 @@
+{{extend './_layouts/home.html'}}
+
+{{block 'title'}}{{'多人博客 - 首页'}}{{/block}}
+
+{{block 'body'}}
+<section class="container">
+  <ul class="media-list">
+    {{ if topic.length > 0 }}
+    {{ each topic}}
+    <li class="media">
+      <div class="media-left">
+        <a href="#">
+          <img width="40" height="40" class="media-object" src="{{ $value.avatar }}" alt="...">
+        </a>
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading"><a href="/topics/show?id={{ $value.id }}">{{ $value.title }}</a></h4>
+        <p>{{ $value.lastCommenter }} 回复了问题 • {{ $value.commentNum }} 个回复 •
+          {{ $value.last_modified_time.toLocaleString()}}</p>
+      </div>
+
+    </li>
+    {{ /each }}
+    {{ else }}
+    <h2>搜索结果为空</h2>
+    {{ /if }}
+
+
+  </ul>
+</section>
+{{/block}}
